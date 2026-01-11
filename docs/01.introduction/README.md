@@ -229,20 +229,20 @@ public class BallTest {
 public class Point {
     private final double x;
     private final double y;
-    
+
     public Point(double x, double y) {
         this.x = x;
         this.y = y;
     }
-    
+
     public double getX() {
         return x;
     }
-    
+
     public double getY() {
         return y;
     }
-    
+
     public double distanceTo(Point other) {
         // TODO: 피타고라스 정리를 사용하여 거리 계산
         // sqrt((x2-x1)² + (y2-y1)²)
@@ -262,6 +262,44 @@ Lab 1-2에서 작성한 `Point` 클래스에 대한 테스트를 작성하세요
 - 생성자 테스트
 - 거리 계산 테스트
 - 예외 상황 테스트 (null 입력 등)
+
+```java
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import static org.junit.jupiter.api.Assertions.*; // 정적 임포트: assertEquals 등을 직접 사용
+
+public class PointTest {
+    // 테스트에서 공통으로 사용할 객체 선언
+    private Point p1;
+    private Point p2;
+
+    // @BeforeEach: 각 테스트 메서드 실행 전에 호출됨
+    // 테스트 간 독립성 보장 (매번 새로운 객체 생성)
+    @BeforeEach
+    void setUp() {
+        p1 = new Point(0, 0);
+        p2 = new Point(3, 4);
+    }
+
+    // @Test: 이 메서드가 테스트임을 JUnit에 알림
+    // @DisplayName: 테스트 결과에 표시될 이름 (한글 가능)
+    @Test
+    @DisplayName("생성자가 올바르게 작동하는지 테스트")
+    void testConstructor() {
+    }
+
+    @Test
+    @DisplayName("거리 계산이 정확한지 테스트")
+    void testDistanceTo() {
+    }
+
+    @Test
+    @DisplayName("null 입력시 예외 발생 테스트")
+    void testDistanceToNull() {
+    }
+}
+```
 
 **참고 자료:**
 - [JUnit 5 시작하기 (한글)](https://steady-coding.tistory.com/349)
@@ -400,16 +438,16 @@ Lab 1-2에서 작성한 `Point` 클래스에 대한 테스트를 작성하세요
        exports com.nhnacademy.cannongame;
    }
    ```
-   
+
    **경고 메시지 해결:**
    `"The type Stage from module javafx.graphics may not be accessible to clients due to missing 'requires transitive'"` 경고가 나타날 경우:
-   
+
    이 경고는 다른 모듈에서 이 모듈을 사용할 때 JavaFX 타입에 접근할 수 없을 수 있다는 의미입니다. 해결 방법:
-   
+
    **방법 1 (권장)**: 경고 무시
    - 이 프로젝트는 독립 실행형 애플리케이션이므로 다른 모듈에서 사용하지 않음
    - 경고가 실행에 영향을 주지 않으므로 무시해도 됨
-   
+
    **방법 2**: transitive 추가 (필요시)
    ```java
    module cannongame {
@@ -419,7 +457,7 @@ Lab 1-2에서 작성한 `Point` 클래스에 대한 테스트를 작성하세요
        exports com.nhnacademy.cannongame;
    }
    ```
-   
+
    **방법 3**: 특정 패키지만 export (보안 강화)
    ```java
    module cannongame {
