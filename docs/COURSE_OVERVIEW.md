@@ -55,11 +55,24 @@
 - 첫 프로그램 작성
 - JUnit 테스트 기초
 
+**Java 학습 포인트:**
+- 클래스와 객체의 기본 개념
+- `public`, `private` 접근 제어자
+- 생성자(Constructor) 작성법
+- getter/setter 메서드 패턴
+
 ### 2장: 볼 월드 (Ball World)
 - Ball 클래스 구현
 - PaintableBall로 확장
 - Canvas 렌더링
 - 예외 처리
+
+**Java 학습 포인트:**
+- `extends` 키워드를 통한 상속
+- `super()` 생성자 호출
+- 메서드 오버라이딩 (`@Override`)
+- 예외 처리 (`throw`, `throws`, `try-catch`)
+- `final` 키워드 (불변 필드)
 
 ### 3장: 움직이는 월드 (Movable World)
 - MovableBall 구현
@@ -67,11 +80,23 @@
 - 벡터와 속도
 - AnimationTimer 사용
 
+**Java 학습 포인트:**
+- 상속 계층 구조 (Ball → PaintableBall → MovableBall)
+- 익명 내부 클래스 (Anonymous Inner Class)
+- 람다 표현식 기초
+- `this` 키워드 활용
+
 ### 4장: 경계가 있는 월드 (Bounded World)
 - BoundedBall 구현
 - 충돌 감지
 - 반사 메커니즘
 - 탄성 충돌
+
+**Java 학습 포인트:**
+- 깊은 상속 계층의 이해
+- `protected` 접근 제어자
+- 조건문과 논리 연산자 활용
+- 메서드 체이닝
 
 ### 5장: 추상 데이터 타입 (Abstract Data Types)
 - 추상 클래스 설계
@@ -79,11 +104,23 @@
 - 템플릿 메서드 패턴
 - 코드 재사용성
 
+**Java 학습 포인트:**
+- `abstract` 클래스와 메서드
+- 템플릿 메서드 패턴 (Template Method Pattern)
+- `record` 클래스 (Java 16+, 불변 데이터 객체)
+- `static` 팩토리 메서드
+
 ### 6장: 새로운 객체들 (New Objects)
 - Box 클래스 추가
 - 상속의 한계 경험
 - 클래스 폭발 문제
 - 인터페이스의 필요성
+
+**Java 학습 포인트:**
+- 다중 상속 불가의 이해
+- 코드 중복 문제 인식
+- 상속 vs 구성(Composition) 비교
+- 리팩토링의 필요성 인식
 
 ### 7장: 단순한 월드 (Simple World)
 - 인터페이스 설계
@@ -91,11 +128,24 @@
 - 다형성 활용
 - 유연한 객체 조합
 
+**Java 학습 포인트:**
+- `interface` 키워드와 구현 (`implements`)
+- 다중 인터페이스 구현
+- 다형성 (Polymorphism)과 동적 바인딩
+- `instanceof` 연산자와 패턴 매칭 (Java 16+)
+- `default` 메서드 (인터페이스 기본 구현)
+
 ### 8장: 벽돌 깨기 (Breakout)
 - 완전한 게임 구현
 - 게임 상태 관리
 - 파워업 시스템
 - 레벨 디자인
+
+**Java 학습 포인트:**
+- `enum` (열거형) 활용
+- 컬렉션 프레임워크 (`List`, `ArrayList`, `Iterator`)
+- 스트림 API (`filter`, `forEach`, `removeIf`)
+- 상태 패턴 (State Pattern)
 
 ### 9장: 외부 효과 (External Effects)
 - 중력 구현
@@ -103,11 +153,24 @@
 - 반발 계수
 - 물리 엔진 설계
 
+**Java 학습 포인트:**
+- 전략 패턴 (Strategy Pattern)
+- 함수형 인터페이스 (`@FunctionalInterface`)
+- 람다 표현식 심화
+- 의존성 주입 (Dependency Injection) 기초
+
 ### 10장: 대포 게임 (Cannon Game)
 - 포물선 운동
 - 사용자 입력 처리
 - 다양한 포탄과 목표물
 - 게임 완성
+
+**Java 학습 포인트:**
+- 팩토리 패턴 (Factory Pattern)
+- 옵저버 패턴 (Observer Pattern)
+- 이벤트 기반 프로그래밍
+- `Optional` 클래스 활용
+- 종합 설계 및 리팩토링
 
 ## 학습 방법 가이드
 
@@ -238,7 +301,7 @@ A: 상속만으로는 해결할 수 없는 문제를 직접 경험한 후 인터
 ## 학습 자원
 
 ### 필수 도구
-- JDK 11 이상
+- JDK 21 이상
 - IntelliJ IDEA (Community Edition)
 - JavaFX SDK
 - Git (버전 관리)

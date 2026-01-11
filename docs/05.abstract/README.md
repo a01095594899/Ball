@@ -191,63 +191,244 @@ AbstractBall을 상속받아 움직이는 공 구현:
 - CircleBounds
 - CompositeBounds (여러 Bounds의 조합)
 
+### Lab 5-2: 추상 클래스 기반 게임 객체
+추상 클래스를 사용한 게임 객체 계층 구현
+
+### Lab 5-3: 디자인 패턴 적용
+Factory Method와 Template Method 패턴 구현
+
+---
+
+## 연습 문제
+
+### 연습 5-1: Shape 추상 클래스 구현
+
+모든 도형의 기본 클래스인 Shape 추상 클래스를 구현합니다.
+
+#### Step 1: 클래스 작성
+`Shape.java` 파일을 생성하고 추상 클래스로 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `protected Point position` 필드 선언 (위치 관리)
+- [ ] `abstract double getArea()` 추상 메서드 선언 (면적 계산)
+- [ ] `abstract double getPerimeter()` 추상 메서드 선언 (둘레 계산)
+- [ ] `abstract String getShapeType()` 추상 메서드 선언 (도형 타입 이름 반환)
+- [ ] `Point getPosition()` 구체 메서드 구현 (위치 반환)
+- [ ] `void moveTo(Point newPosition)` 구체 메서드 구현 (절대 위치로 이동)
+- [ ] `void moveBy(Vector2D delta)` 구체 메서드 구현 (상대적 이동)
+
+#### Step 2: 단위 테스트 작성
+`ShapeTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| 추상 클래스 확인 | Shape 직접 인스턴스화 불가 확인 |
+| 하위 클래스 생성 | Circle, Rectangle 생성 확인 |
+| 면적 계산 | 각 도형의 면적 계산 검증 |
+| 둘레 계산 | 각 도형의 둘레 계산 검증 |
+| 다형성 | Shape 배열로 다양한 도형 처리 |
+
+---
+
+### 연습 5-2: Bounds 추상 클래스와 구현체
+
+경계를 표현하는 Bounds 추상 클래스와 RectangleBounds, CircleBounds를 구현합니다.
+
+#### Step 1: Bounds 추상 클래스 작성
+`Bounds.java` 파일을 생성하고 추상 클래스로 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `abstract double getMinX()` 추상 메서드 선언 (최소 x 좌표)
+- [ ] `abstract double getMinY()` 추상 메서드 선언 (최소 y 좌표)
+- [ ] `abstract double getMaxX()` 추상 메서드 선언 (최대 x 좌표)
+- [ ] `abstract double getMaxY()` 추상 메서드 선언 (최대 y 좌표)
+- [ ] `double getWidth()` 구체 메서드 구현 (maxX - minX)
+- [ ] `double getHeight()` 구체 메서드 구현 (maxY - minY)
+- [ ] `double getCenterX()` 구체 메서드 구현 (중심 x 좌표)
+- [ ] `double getCenterY()` 구체 메서드 구현 (중심 y 좌표)
+- [ ] `boolean contains(Point point)` 구체 메서드 구현 (점 포함 여부)
+- [ ] `boolean intersects(Bounds other)` 구체 메서드 구현 (교차 여부)
+
+#### Step 2: RectangleBounds 클래스 작성
+`RectangleBounds.java` 파일을 생성하고 Bounds를 상속받아 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `double minX`, `double minY` 필드 선언 (왼쪽 상단 좌표)
+- [ ] `double width`, `double height` 필드 선언 (너비와 높이)
+- [ ] 생성자 구현 (유효성 검사 포함)
+- [ ] `getMinX()`, `getMinY()`, `getMaxX()`, `getMaxY()` 추상 메서드 구현
+
+#### Step 3: CircleBounds 클래스 작성
+`CircleBounds.java` 파일을 생성하고 Bounds를 상속받아 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `double centerX`, `double centerY` 필드 선언 (중심 좌표)
+- [ ] `double radius` 필드 선언 (반지름)
+- [ ] 생성자 구현 (유효성 검사 포함)
+- [ ] 4개의 추상 메서드 구현 (원의 경계 사각형 계산)
+
+**원의 경계 공식:**
+```
+minX = centerX - radius
+maxX = centerX + radius
+minY = centerY - radius
+maxY = centerY + radius
+```
+
+#### Step 4: 단위 테스트 작성
+`BoundsTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| RectangleBounds 생성 | 좌표 및 크기 확인 |
+| CircleBounds 생성 | 중심 및 반지름 확인 |
+| contains(Point) | 점 포함 여부 검증 |
+| intersects(Bounds) | 교차 여부 검증 |
+| 유효성 검사 | 음수 크기에 대한 예외 |
+
+---
+
+### 연습 5-3: Vector2D 확장 구현
+
+Vector 추상 클래스를 상속받아 2차원 벡터를 구현합니다.
+
+#### Step 1: Vector 추상 클래스 작성
+`Vector.java` 파일을 생성하고 추상 클래스로 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `abstract double get(int index)` 추상 메서드 선언 (특정 인덱스의 값 반환)
+- [ ] `abstract int getDimension()` 추상 메서드 선언 (벡터의 차원 반환)
+- [ ] `double magnitude()` 구체 메서드 구현 (벡터의 크기 계산)
+- [ ] `abstract Vector normalize()` 추상 메서드 선언 (정규화된 벡터 반환)
+- [ ] `double dot(Vector other)` 구체 메서드 구현 (내적 계산)
+
+#### Step 2: Vector2D 클래스 작성
+`Vector2D.java` 파일을 생성하고 Vector를 상속받아 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `double x`, `double y` 필드 선언 (2차원 성분)
+- [ ] `double getX()`, `double getY()` 성분 접근자 구현
+- [ ] `Vector2D add(Vector2D other)` 벡터 덧셈 구현
+- [ ] `Vector2D subtract(Vector2D other)` 벡터 뺄셈 구현
+- [ ] `Vector2D multiply(double scalar)` 스칼라 곱 구현
+- [ ] `Vector2D divide(double scalar)` 스칼라 나눗셈 구현
+- [ ] `double angle()` 벡터의 각도 (라디안) 구현
+- [ ] `Vector2D rotate(double angle)` 회전 구현
+- [ ] `double cross(Vector2D other)` 2D 외적 (스칼라) 구현
+- [ ] `static Vector2D fromPolar(double magnitude, double angle)` 극좌표로 생성 구현
+- [ ] `static Vector2D zero()`, `static Vector2D unitX()`, `static Vector2D unitY()` 팩토리 메서드 구현
+
+**벡터 공식:**
+```
+크기: √(x² + y²)
+각도: atan2(y, x)
+정규화: (x/|v|, y/|v|)
+내적: x₁×x₂ + y₁×y₂
+2D 외적: x₁×y₂ - y₁×x₂
+회전: (x×cos(θ) - y×sin(θ), x×sin(θ) + y×cos(θ))
+```
+
+#### Step 3: 단위 테스트 작성
+`Vector2DTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| 벡터 생성 | 성분 확인 |
+| 극좌표 생성 | fromPolar 검증 |
+| 산술 연산 | add, subtract, multiply, divide |
+| 크기와 방향 | magnitude, angle, normalize |
+| 내적/외적 | dot, cross |
+| 회전 | 90도, 180도 회전 검증 |
+| 불변성 | 연산 후 원본 변경 없음 |
+
+---
+
+### 연습 5-4: AbstractBall과 Template Method 패턴
+
+Template Method 패턴을 적용한 AbstractBall 추상 클래스를 구현합니다.
+
+#### Step 1: AbstractBall 추상 클래스 작성
+`AbstractBall.java` 파일을 생성하고 Template Method 패턴을 적용하여 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `Point center` 필드 선언 (위치 관리)
+- [ ] `double radius` 필드 선언 (반지름)
+- [ ] `Bounds bounds` 필드 선언 (경계 관리)
+- [ ] `final void update(double deltaTime)` Template Method 구현 (전체 업데이트 프로세스)
+- [ ] `protected void beforeUpdate()` 전처리 훅 구현 (기본 빈 구현)
+- [ ] `abstract void performUpdate(double deltaTime)` 추상 메서드 선언 (핵심 로직)
+- [ ] `protected void afterUpdate()` 후처리 훅 구현 (기본 빈 구현)
+- [ ] `private void updateBounds()` 경계 업데이트 구현
+
+**Template Method 구조:**
 ```java
-@Test
-public void testBoundsIntersection() {
-    Bounds rect = new RectangleBounds(0, 0, 100, 100);
-    Bounds circle = new CircleBounds(new Point(150, 50), 30);
-
-    assertFalse(rect.intersects(circle));
-
-    circle = new CircleBounds(new Point(80, 50), 30);
-    assertTrue(rect.intersects(circle));
+public final void update(double deltaTime) {
+    beforeUpdate();           // 훅 (옵션)
+    performUpdate(deltaTime); // 추상 (필수 구현)
+    afterUpdate();            // 훅 (옵션)
+    updateBounds();           // 고정 로직
 }
 ```
 
-### Lab 5-2: 추상 클래스 기반 게임 객체
-추상 클래스를 사용한 게임 객체 계층:
-**GameObject 추상 클래스 설계**
+#### Step 2: SimpleMovableBall 클래스 작성
+`SimpleMovableBall.java` 파일을 생성하고 AbstractBall을 상속받아 구현하세요.
 
-모든 게임 객체의 기본 클래스:
+**구현 체크리스트:**
+- [ ] `extends AbstractBall`로 상속 선언 및 부모 생성자 호출
+- [ ] `Vector2D velocity` 필드 선언 (속도 관리)
+- [ ] `performUpdate(double deltaTime)` 구현 (위치 = 위치 + 속도 × 시간)
+- [ ] `void setVelocity(Vector2D velocity)` 속도 설정 구현
+- [ ] `Vector2D getVelocity()` 속도 반환 구현
 
-**필드:**
-- `position`: 위치 (Point)
-- `bounds`: 경계 (Bounds)
+#### Step 3: 단위 테스트 작성
+`AbstractBallTest.java`를 작성하여 다음 항목을 테스트하세요:
 
-**추상 메서드:**
-- `update(double deltaTime)`: 상태 업데이트
-- `render(GraphicsContext gc)`: 화면에 그리기
-- `handleCollision(GameObject other)`: 충돌 처리
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| AbstractBall 생성 | 직접 인스턴스화 불가 확인 |
+| SimpleMovableBall 생성 | 위치, 반지름, 속도 확인 |
+| Template Method 호출 | performUpdate가 호출되는지 확인 |
+| 위치 업데이트 | 속도에 따른 위치 변경 검증 |
+| 경계 업데이트 | Bounds가 함께 업데이트되는지 확인 |
+| 다중 업데이트 | 여러 번 update 호출 시 누적 확인 |
 
-하위 클래스에서 각 게임 객체에 맞게 구현합니다.
+---
 
-### Lab 5-3: 디자인 패턴 적용
-Factory Method와 Template Method 패턴 구현:
-**BallFactory 추상 클래스 설계**
+### 연습 5-5: BallFactory와 Factory Method 패턴
 
-Factory Method 패턴을 사용한 공 생성:
+Factory Method 패턴을 적용한 BallFactory를 구현합니다.
 
-**추상 메서드:**
-- `createBall(Point center, double radius)`: 구체적인 Ball 생성
-- `createBall(double x, double y, double radius)`: 구체적인 Ball 생성
+#### Step 1: BallFactory 추상 클래스 작성
+`BallFactory.java` 파일을 생성하고 추상 클래스로 구현하세요.
 
-**구체 메서드:**
-- `createRandomBalls(int count, Bounds area)`: 랜덤 공 여러 개 생성
-  - 주어진 영역 내에 랜덤 위치
-  - 랜덤 크기 (10~40)
-  - createBall() 호출하여 생성
+**구현 체크리스트:**
+- [ ] `abstract Ball createBall(Point center, double radius)` 추상 메서드 선언 (구체적인 Ball 생성)
+- [ ] `abstract Ball createBall(double x, double y, double radius)` 오버로드 추상 메서드 선언
+- [ ] `List<Ball> createRandomBalls(int count, Bounds area)` 구체 메서드 구현 (랜덤 공 생성)
 
-**Factory Method 패턴의 장점:**
-1. 객체 생성 로직 캡슐화
-2. 하위 클래스에서 생성 방식 결정
-3. 확장 가능한 구조
+#### Step 2: SimpleBallFactory 구현
+`SimpleBallFactory.java` 파일을 생성하고 BallFactory를 상속받아 구현하세요.
 
-**구현 힌트:**
-```java
-// 랜덤 위치 계산
-x = minX + random() * width
-y = minY + random() * height
-```
+**구현 체크리스트:**
+- [ ] `extends BallFactory`로 상속 선언
+- [ ] `createBall` 메서드 구현 (SimpleMovableBall 생성)
+
+#### Step 3: BoundedBallFactory 구현
+`BoundedBallFactory.java` 파일을 생성하고 BallFactory를 상속받아 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `extends BallFactory`로 상속 선언
+- [ ] `createBall` 메서드 구현 (BoundedBall 생성)
+
+#### Step 4: 단위 테스트 작성
+`BallFactoryTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| SimpleBallFactory | SimpleMovableBall 생성 확인 |
+| BoundedBallFactory | BoundedBall 생성 확인 |
+| createRandomBalls | 개수, 위치 범위 확인 |
+| 다형성 | BallFactory 타입으로 다양한 공 생성 |
 
 ## JUnit 테스트 예제
 

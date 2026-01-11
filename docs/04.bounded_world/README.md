@@ -32,54 +32,6 @@ MovableBall을 상속받아 경계 충돌 처리를 추가합니다:
   - 충돌 시 속도 반전
   - 위치 보정 (경계 안쪽으로)
 
-**구현 힌트:**
-```java
-// 생성자에서 경계 초기화 (경계 없음 상태)
-public BoundedBall(Point center, double radius, Color color) {
-    super(center, radius, color);
-    // 초기값: 경계가 설정되지 않은 상태를 나타냄
-    this.minX = Double.MIN_VALUE;
-    this.minY = Double.MIN_VALUE;
-    this.maxX = Double.MAX_VALUE;
-    this.maxY = Double.MAX_VALUE;
-}
-
-// 경계 설정 시 공의 중심이 이동 가능한 범위
-public void setBounds(double minX, double minY, double maxX, double maxY) {
-    this.minX = minX + getRadius();
-    this.maxX = maxX - getRadius();
-
-this.minY = minY + getRadius();
-    this.maxY = maxY - getRadius();
-}
-
-// move 메서드에서 경계 충돌 처리
-@Override
-public void move(double deltaTime) {
-    // 다음 위치 계산
-    Point nextPoint = getCenter().add(getVelocity().multiply(deltaTime));
-
-    // 경계가 설정된 경우에만 충돌 검사
-    // Double.MIN_VALUE와 Double.MAX_VALUE는 경계가 없음을 의미
-    if (minX > Double.MIN_VALUE && maxX < Double.MAX_VALUE) {
-        if (nextPoint.getX() <= minX || nextPoint.getX() >= maxX) {
-            // 1. 속도 반전
-            // 2. 위치 보정
-        }
-    }
-
-    if (minY > Double.MIN_VALUE && maxY < Double.MAX_VALUE) {
-        if (nextPoint.getY() <= minY || nextPoint.getY() >= maxY) {
-            // 1. 속도 반전
-            // 2. 위치 보정
-        }
-    }
-
-    // 부모 클래스의 move 호출
-    super.move(deltaTime);
-}
-```
-
 ### 4.2 개선된 충돌 감지와 반사
 
 **CollisionDetector 클래스 설계**
@@ -110,17 +62,6 @@ public void move(double deltaTime) {
 
 **참고**: 이 장에서는 반발 계수의 개념을 소개하지만, 실제 구현은 단순화를 위해 완전 탄성 충돌(반발 계수 1.0)로 가정합니다. 반발 계수의 실제 적용은 고급 주제로 다음 장에서 다룹니다.
 
-**구현 힌트:**
-```java
-// 침투 깊이 계산
-// 왼쪽 벽: minX - (ballX - radius)
-// 오른쪽 벽: (ballX + radius) - maxX
-
-// 속도 반전 (이 장에서는 단순화를 위해 반발 계수 1.0 가정)
-ball.setDx(-ball.getDx());
-// 추후 반발 계수 적용 시: ball.setDx(-ball.getDx() * restitution);
-```
-
 ### 4.3 공 간의 충돌
 
 **BallCollision 클래스 설계**
@@ -148,22 +89,6 @@ ball.setDx(-ball.getDx());
 1. **운동량 보존**: m₁v₁ + m₂v₂ = m₁v₁' + m₂v₂'
 2. **충격량**: I = Δp = mΔv
 3. **탄성 충돌**: 에너지 보존
-
-**구현 힌트:**
-```java
-// 충돌 감지
-거리 = √((x₂-x₁)² + (y₂-y₁)²)
-충돌 조건: 거리 < r₁ + r₂
-
-// 충돌 방향 벡터 (정규화)
-n = (ball2 - ball1) / distance
-
-// 충격량 계산
-impulse = 2 * 상대속도 / (질량합)
-
-// 멀어지고 있는지 확인
-if (상대속도 · 충돌방향 <= 0) return;
-```
 
 ### 4.4 BoundedWorld - 충돌 처리 통합
 
@@ -213,16 +138,6 @@ BoundedWorld (4장: 충돌 처리 추가)
    - areColliding() 호출
    - 공 충돌시 resolveCollision() 호출
 
-**최적화 힌트:**
-```java
-// 이중 충돌 방지
-for (int i = 0; i < balls.size(); i++) {
-    for (int j = i + 1; j < balls.size(); j++) {
-        // 각 쌍을 한 번만 검사
-    }
-}
-```
-
 ## 실습 과제
 
 ### Lab 4-1: BoundedBall 구현
@@ -231,27 +146,6 @@ for (int i = 0; i < balls.size(); i++) {
 - 경계 충돌 감지
 - 반사 구현
 - 위치 보정
-
-**테스트 코드:**
-```java
-@Test
-public void testWallBounce() {
-    BoundedBall ball = new BoundedBall(new Point(50, 300), 20);
-    ball.setBounds(0, 0, 800, 600);
-    ball.setVelocity(new Vector2D(-100, 0)); // 왼쪽으로 이동
-
-    // 충돌 전
-    assertTrue(ball.getVelocity().getX() < 0);
-
-    // 충분히 이동시켜 충돌 발생
-    for (int i = 0; i < 10; i++) {
-        ball.move(0.1);
-    }
-
-    // 충돌 후 방향 반전
-    assertTrue(ball.getVelocity().getX() > 0);
-}
-```
 
 ### Lab 4-2: 다양한 충돌 시나리오
 다양한 충돌 상황 구현:
@@ -271,33 +165,326 @@ public void testWallBounce() {
 - 동시 다중 충돌
 - 고속 충돌 (터널링 방지)
 
-**AdvancedCollisionApp 구현 가이드**
+---
 
-고급 충돌 시뮬레이션 앱을 만드세요:
+## 연습 문제
 
-**필요한 기능:**
-1. BoundedWorld 사용
-2. UI 컨트롤:
-   - 중력 활성화 체크박스
-   - 공 개수 조절 슬라이더
-3. 다양한 크기의 공 생성
-4. AnimationTimer로 게임 루프 구현
+### 연습 4-1: BoundedBall 클래스 구현
 
-**추가 메서드:**
-- `createBalls()`: 랜덤한 크기와 속도의 공 생성
-- `applyGravity()`: 모든 공에 중력 적용 (dy 증가)
-- `render()`: Canvas에 그리기
+MovableBall을 상속받아 경계 충돌 처리를 추가하는 BoundedBall 클래스를 구현합니다.
 
-**중력 구현 힌트:**
+#### Step 1: 클래스 작성
+`BoundedBall.java` 파일을 생성하고 MovableBall을 상속받아 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `double minX`, `double minY` 최소 경계 필드 선언 (공의 중심 기준)
+- [ ] `double maxX`, `double maxY` 최대 경계 필드 선언 (공의 중심 기준)
+- [ ] 생성자에서 경계 초기값을 Double.MIN_VALUE/MAX_VALUE로 설정
+- [ ] `setBounds(minX, minY, maxX, maxY)` 메서드 구현 (경계 설정 시 반지름 고려)
+- [ ] `move(deltaTime)` 오버라이드하여 경계 충돌 검사 및 속도 반전, 위치 보정
+
+#### Step 2: 단위 테스트 작성
+`BoundedBallTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| 생성 테스트 | BoundedBall 객체 생성 및 상속 관계 확인 |
+| 초기 경계 테스트 | 경계 미설정 시 자유 이동 가능 확인 |
+| 경계 설정 테스트 | setBounds 호출 후 경계가 반지름 고려하여 설정됨 |
+| 왼쪽 벽 충돌 | X 속도가 양수로 반전되는지 확인 |
+| 오른쪽 벽 충돌 | X 속도가 음수로 반전되는지 확인 |
+| 위쪽 벽 충돌 | Y 속도가 양수로 반전되는지 확인 |
+| 아래쪽 벽 충돌 | Y 속도가 음수로 반전되는지 확인 |
+| 위치 보정 테스트 | 충돌 후 공이 경계 안쪽에 위치하는지 확인 |
+| 코너 충돌 테스트 | 모서리에서 두 방향 모두 반사되는지 확인 |
+| 상속 확인 | MovableBall, PaintableBall, Ball 상속 확인 |
+
+---
+
+### 연습 4-2: CollisionDetector 클래스 구현
+
+벽과의 충돌을 감지하고 처리하는 유틸리티 클래스를 구현합니다.
+
+#### Step 1: 클래스 작성
+`CollisionDetector.java` 파일을 생성하고 벽 충돌 감지 유틸리티 클래스를 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `Wall` enum 정의 (LEFT, RIGHT, TOP, BOTTOM)
+- [ ] `WallCollision` 내부 클래스 구현 (충돌한 벽과 침투 깊이 저장)
+- [ ] `checkWallCollision(ball, minX, minY, maxX, maxY)` 정적 메서드 구현 (각 벽과의 충돌 검사, 충돌 시 WallCollision 반환, 없으면 null)
+- [ ] `resolveWallCollision(ball, collision)` 정적 메서드 구현 (충돌한 벽에 따라 속도 반전)
+
+#### Step 2: 단위 테스트 작성
+`CollisionDetectorTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| 왼쪽 벽 충돌 감지 | Wall.LEFT 반환 및 침투 깊이 확인 |
+| 오른쪽 벽 충돌 감지 | Wall.RIGHT 반환 및 침투 깊이 확인 |
+| 위쪽 벽 충돌 감지 | Wall.TOP 반환 및 침투 깊이 확인 |
+| 아래쪽 벽 충돌 감지 | Wall.BOTTOM 반환 및 침투 깊이 확인 |
+| 충돌 없음 | 중앙에 위치한 공은 null 반환 |
+| 경계선 접촉 | 정확히 경계에 닿은 경우 처리 확인 |
+| 왼쪽 벽 충돌 해결 | X 속도가 양수로 반전 |
+| 오른쪽 벽 충돌 해결 | X 속도가 음수로 반전 |
+| 위쪽 벽 충돌 해결 | Y 속도가 양수로 반전 |
+| 아래쪽 벽 충돌 해결 | Y 속도가 음수로 반전 |
+
+---
+
+### 연습 4-3: BallCollision 클래스 구현
+
+두 공 사이의 충돌을 감지하고 처리하는 클래스를 구현합니다.
+
+#### Step 1: 클래스 작성
+`BallCollision.java` 파일을 생성하고 공 간의 충돌을 처리하는 클래스를 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `areColliding(ball1, ball2)` 정적 메서드 구현 (두 공의 중심 거리가 반지름 합보다 작으면 충돌)
+- [ ] `resolveElasticCollision(ball1, ball2)` 정적 메서드 구현 (탄성 충돌 처리, 운동량 보존)
+- [ ] `separateBalls(ball1, ball2)` 정적 메서드 구현 (겹친 공을 분리)
+
+**물리 공식:**
+- 거리 = √((x₂-x₁)² + (y₂-y₁)²)
+- 충돌 조건: 거리 < r₁ + r₂
+- 충돌 방향 벡터: n = (ball2 - ball1) / distance
+- 충격량: impulse = 2 * 상대속도 / (질량합)
+
+#### Step 2: 단위 테스트 작성
+`BallCollisionTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| 충돌 감지 (겹침) | 두 공이 겹쳤을 때 true 반환 |
+| 충돌 감지 (떨어짐) | 두 공이 떨어져 있을 때 false 반환 |
+| 충돌 감지 (접촉) | 정확히 닿은 경우 (거리 = r₁ + r₂) 처리 |
+| 정면 충돌 | 마주보며 다가오는 공들의 속도 교환 |
+| 정지 공 충돌 | 움직이는 공이 정지한 공에 충돌 |
+| 탄성 충돌 | 충돌 전후 운동량 보존 확인 |
+| 에너지 보존 | 충돌 전후 운동 에너지 보존 확인 |
+| 공 분리 | 분리 후 두 공 사이 거리 ≥ r₁ + r₂ |
+| 다른 크기 공 | 크기가 다른 두 공의 충돌 처리 |
+
+---
+
+### 연습 4-4: BoundedWorld 클래스 구현
+
+MovableWorld를 상속받아 충돌 처리 기능을 통합한 클래스를 구현합니다.
+
+#### Step 1: 클래스 작성
+`BoundedWorld.java` 파일을 생성하고 MovableWorld를 상속받아 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `extends MovableWorld`로 상속 선언 (기존 이동 기능 재사용)
+- [ ] `add(Ball ball)` 오버라이드하여 공 추가 시 경계 설정
+- [ ] `update(deltaTime)` 오버라이드하여 이동 + 벽 충돌 + 공 충돌 처리
+
+**update 메서드 구현 순서:**
+1. 모든 공 이동 (super.update 또는 직접)
+2. 벽과의 충돌 검사 및 처리
+3. 공 간의 충돌 검사 및 처리 (이중 루프 사용)
+
+#### Step 2: 단위 테스트 작성
+`BoundedWorldTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| 생성 테스트 | World 크기 (width, height) 확인 |
+| 공 추가 테스트 | add 시 경계가 자동 설정되는지 확인 |
+| 왼쪽 벽 충돌 처리 | 벽 충돌 후 속도 반전 및 위치 보정 |
+| 오른쪽 벽 충돌 처리 | 벽 충돌 후 속도 반전 및 위치 보정 |
+| 위쪽 벽 충돌 처리 | 벽 충돌 후 속도 반전 및 위치 보정 |
+| 아래쪽 벽 충돌 처리 | 벽 충돌 후 속도 반전 및 위치 보정 |
+| 공-공 충돌 처리 | 운동량 보존 및 분리 확인 |
+| 다중 공 충돌 | 여러 공이 충돌해도 모두 분리됨 |
+| 코너 반사 | 모서리에서 두 방향 모두 반사 |
+| update 통합 테스트 | 이동, 벽 충돌, 공 충돌이 순서대로 처리 |
+| 상속 확인 | MovableWorld, World 상속 확인 |
+
+#### Step 3: JavaFX 애플리케이션에서 확인
+
 ```java
-// 중력 가속도 (예: 500 pixels/s²)
-private static final double GRAVITY = 500;
+public class BoundedWorldApp extends Application {
+    private BoundedWorld world;
+    private Canvas canvas;
 
-// 모든 공에 적용
-for (Ball ball : world.getBalls()) {
-    if (ball instanceof MovableBall) {
-        MovableBall movable = (MovableBall) ball;
-        movable.setDy(movable.getVelocity().getY() + GRAVITY * deltaTime);
+    @Override
+    public void start(Stage primaryStage) {
+        world = new BoundedWorld(800, 600);
+        canvas = new Canvas(800, 600);
+
+        // 여러 공 추가
+        Random random = new Random();
+        for (int i = 0; i < 5; i++) {
+            BoundedBall ball = new BoundedBall(
+                new Point(100 + i * 120, 300),
+                15 + random.nextInt(15),
+                Color.color(random.nextDouble(), random.nextDouble(), random.nextDouble())
+            );
+            ball.setVelocity(new Vector2D(
+                -100 + random.nextInt(200),
+                -100 + random.nextInt(200)
+            ));
+            world.add(ball);
+        }
+
+        AnimationTimer timer = new AnimationTimer() {
+            private long lastTime = 0;
+
+            @Override
+            public void handle(long now) {
+                if (lastTime == 0) {
+                    lastTime = now;
+                    return;
+                }
+                double deltaTime = (now - lastTime) / 1_000_000_000.0;
+                lastTime = now;
+
+                world.update(deltaTime);
+
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+                gc.setFill(Color.WHITE);
+                gc.fillRect(0, 0, 800, 600);
+                world.draw(gc);
+            }
+        };
+        timer.start();
+
+        Scene scene = new Scene(new Pane(canvas), 800, 600);
+        primaryStage.setTitle("Bounded World Demo");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+```
+
+---
+
+### 연습 4-5: 고급 충돌 시뮬레이션
+
+중력과 UI 컨트롤이 포함된 고급 충돌 시뮬레이션을 구현합니다.
+
+#### Step 1: 애플리케이션 구성
+`AdvancedCollisionApp.java` 파일을 생성하고 중력과 UI 컨트롤이 포함된 애플리케이션을 구현하세요.
+
+**구현 체크리스트:**
+- [ ] 중력 활성화 체크박스 구현 (중력 적용 여부 토글)
+- [ ] 공 개수 조절 슬라이더 구현 (실시간 공 개수 조절)
+- [ ] `createBalls(int count)` 메서드 구현 (랜덤 크기와 속도의 공 생성)
+- [ ] `applyGravity(double deltaTime)` 메서드 구현 (모든 공에 중력 적용)
+
+#### Step 2: 단위 테스트 작성
+`AdvancedCollisionAppTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| createBalls 테스트 | 지정한 개수만큼 공 생성 확인 |
+| 랜덤 위치 테스트 | 생성된 공들이 World 범위 내에 위치 |
+| 랜덤 속도 테스트 | 생성된 공들이 속도를 가짐 |
+| applyGravity 비활성화 | gravityEnabled=false일 때 속도 변화 없음 |
+| applyGravity 활성화 | gravityEnabled=true일 때 Y 속도 증가 |
+| 중력 방향 테스트 | 중력이 양의 Y 방향 (아래)으로 작용 |
+| 중력 누적 테스트 | 여러 프레임에 걸쳐 속도가 누적 |
+
+#### Step 3: JavaFX 애플리케이션에서 확인
+
+```java
+public class AdvancedCollisionApp extends Application {
+    private BoundedWorld world;
+    private Canvas canvas;
+    private CheckBox gravityCheckbox;
+    private Slider ballCountSlider;
+    private boolean gravityEnabled = false;
+    private static final double GRAVITY = 500;
+
+    @Override
+    public void start(Stage primaryStage) {
+        world = new BoundedWorld(800, 600);
+        canvas = new Canvas(800, 600);
+
+        // UI 컨트롤
+        gravityCheckbox = new CheckBox("중력 활성화");
+        gravityCheckbox.setOnAction(e -> gravityEnabled = gravityCheckbox.isSelected());
+
+        ballCountSlider = new Slider(1, 20, 5);
+        ballCountSlider.setShowTickLabels(true);
+        ballCountSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            createBalls(newVal.intValue());
+        });
+
+        HBox controls = new HBox(10, gravityCheckbox, new Label("공 개수:"), ballCountSlider);
+        controls.setPadding(new Insets(10));
+
+        VBox root = new VBox(controls, canvas);
+
+        createBalls(5);
+
+        AnimationTimer timer = new AnimationTimer() {
+            private long lastTime = 0;
+
+            @Override
+            public void handle(long now) {
+                if (lastTime == 0) {
+                    lastTime = now;
+                    return;
+                }
+                double deltaTime = (now - lastTime) / 1_000_000_000.0;
+                lastTime = now;
+
+                applyGravity(deltaTime);
+                world.update(deltaTime);
+                render();
+            }
+        };
+        timer.start();
+
+        Scene scene = new Scene(root);
+        primaryStage.setTitle("Advanced Collision Simulation");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void createBalls(int count) {
+        world.clear();
+        Random random = new Random();
+        for (int i = 0; i < count; i++) {
+            BoundedBall ball = new BoundedBall(
+                new Point(50 + random.nextInt(700), 50 + random.nextInt(500)),
+                10 + random.nextInt(20),
+                Color.color(random.nextDouble(), random.nextDouble(), random.nextDouble())
+            );
+            ball.setVelocity(new Vector2D(
+                -150 + random.nextInt(300),
+                -150 + random.nextInt(300)
+            ));
+            world.add(ball);
+        }
+    }
+
+    private void applyGravity(double deltaTime) {
+        if (!gravityEnabled) return;
+        for (Ball ball : world.getBalls()) {
+            if (ball instanceof MovableBall) {
+                MovableBall movable = (MovableBall) ball;
+                double newDy = movable.getVelocity().getY() + GRAVITY * deltaTime;
+                movable.setVelocity(new Vector2D(movable.getVelocity().getX(), newDy));
+            }
+        }
+    }
+
+    private void render() {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0, 0, 800, 600);
+        world.draw(gc);
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }
 ```

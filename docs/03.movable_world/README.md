@@ -40,40 +40,93 @@ PaintableBall을 상속받아 움직임 기능을 추가합니다:
 - `move()`: 프레임 단위 이동 (기본적으로 1/60초 가정)
 - `move(double deltaTime)`: 시간 기반 이동
 
-**구현 힌트:**
-```java
-public class MovableBall extends PaintableBall {
-    private Vector2D velocity;
+---
 
-    public MovableBall(Point center, double radius) {
-        super(center, radius);
-        // 속도 초기화
-    }
+### 연습 3-1: Vector2D 클래스 구현
 
-    public MovableBall(Point center, double radius, Color color) {
-        super(center, radius, color);
-        // 속도 초기화
-    }
+#### Step 1: 클래스 작성
+`Vector2D.java` 파일을 생성하고 위의 설계에 맞게 구현하세요.
 
-    public MovableBall(Point center, double radius, Color color, Vector2D velocity) {
-        super(center, radius, color);
-        // 속도 초기화
-    }
+**구현 체크리스트:**
+- [ ] `double x`, `double y` 필드 선언 (final)
+- [ ] `Vector2D()` 기본 생성자 구현 (영벡터)
+- [ ] `Vector2D(double x, double y)` 생성자 구현
+- [ ] `getX()`, `getY()` getter 구현
+- [ ] `add(Vector2D other)` 벡터 덧셈 구현
+- [ ] `subtract(Vector2D other)` 벡터 뺄셈 구현
+- [ ] `multiply(double scalar)` 스칼라 곱셈 구현
+- [ ] `magnitude()` 벡터 크기 계산 구현
+- [ ] `normalize()` 정규화 구현 (영벡터 처리 포함)
+- [ ] `dot(Vector2D other)` 내적 계산 구현
 
-    // 시간 기반 이동
-    public void move(double deltaTime) {
-        Point currentCenter = getCenter();
-        Vector2D displacement = new Vector(velocity.getX() * deltaTime, velocity.getY() * deltaTime);
-        Point newCenter = currentCenter.add(displacement);
-        moveTo(newCenter);
-    }
+#### Step 2: 단위 테스트 작성
+`Vector2DTest.java`를 작성하여 다음 항목을 테스트하세요:
 
-    public void move() {
-        // 기본 60 FPS 가정
-        // 메서드 활용
-    }
-}
-```
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| 생성자 정상 동작 | x, y 성분이 올바르게 저장되는지 |
+| 기본 생성자 | 영벡터(0, 0)가 생성되는지 |
+| 벡터 덧셈 | `(2,3) + (1,4) = (3,7)` |
+| 벡터 뺄셈 | `(5,8) - (2,3) = (3,5)` |
+| 스칼라 곱셈 | `(3,4) × 2 = (6,8)` |
+| 크기 계산 | `(3,4)`의 크기가 5인지 |
+| 정규화 | 정규화 후 크기가 1인지 |
+| 영벡터 정규화 | 영벡터 정규화 시 영벡터 반환하는지 |
+| 내적 | `(3,4)·(2,1) = 10` |
+| 불변성 | 연산 후 원본 벡터가 변경되지 않는지 |
+
+---
+
+### 연습 3-2: Point 클래스 확장
+
+#### Step 1: 메서드 추가
+`Point.java`에 Vector2D와 연산하는 메서드를 추가하세요.
+
+**구현 체크리스트:**
+- [ ] `add(Vector2D vector)` 메서드 추가 - Point 반환
+- [ ] `subtract(Point other)` 메서드 추가 - Vector2D 반환
+
+#### Step 2: 단위 테스트 작성
+`PointVectorTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| Point + Vector2D | `(100,100) + (50,30) = (150,130)` |
+| Point - Point | `(150,130) - (100,100) = Vector2D(50,30)` |
+
+---
+
+### 연습 3-3: MovableBall 클래스 구현
+
+#### Step 1: 클래스 작성
+`MovableBall.java` 파일을 생성하고 PaintableBall을 상속받아 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `extends PaintableBall`로 상속 선언
+- [ ] `Vector2D velocity` 필드 추가
+- [ ] `MovableBall(Point center, double radius)` 생성자 구현 (속도 영벡터, 기본 색상)
+- [ ] `MovableBall(Point center, double radius, Color color)` 생성자 구현 (속도 영벡터)
+- [ ] `MovableBall(Point center, double radius, Color color, Vector2D velocity)` 생성자 구현
+- [ ] `getVelocity()` getter 구현
+- [ ] `setVelocity(Vector2D velocity)` setter 구현
+- [ ] `move(double deltaTime)` 시간 기반 이동 구현
+- [ ] `move()` 기본 이동 구현 (1/60초 가정)
+
+#### Step 2: 단위 테스트 작성
+`MovableBallTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| 상속 확인 | `MovableBall instanceof PaintableBall`이 true인지 |
+| 생성자 정상 동작 | 위치, 반지름, 색상이 올바르게 저장되는지 |
+| 초기 속도 | 기본 생성자로 생성 시 속도가 영벡터인지 |
+| setVelocity 동작 | 속도 설정 후 getVelocity() 값이 변경되는지 |
+| move 이동량 | 속도 (60, 80)으로 0.5초 이동 시 (30, 40) 만큼 이동하는지 |
+| move 영벡터 | 속도가 0일 때 이동하지 않는지 |
+| move 음수 속도 | 음수 속도로 반대 방향 이동하는지 |
+| 부모 메서드 사용 | `getCenter()`, `getRadius()`, `getColor()`, `contains()` 등 작동하는지 |
+
+---
 
 ### 3.2 시간 기반 애니메이션
 
@@ -130,11 +183,39 @@ AnimationTimer를 상속받아 게임 루프를 구현합니다:
 4. 배경 그리기
 5. 모든 공 그리기
 
-**델타 타임 계산 힌트:**
+**델타 타임 계산:**
 ```java
 // 나노초를 초로 변환: 1초 = 1,000,000,000 나노초
 double deltaTime = (now - lastUpdate) / 1_000_000_000.0;
 ```
+
+---
+
+### 연습 3-4: MovableWorld 클래스 구현
+
+#### Step 1: 클래스 작성
+`MovableWorld.java` 파일을 생성하고 World를 상속받아 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `extends World`로 상속 선언
+- [ ] `MovableWorld(int width, int height)` 생성자 구현
+- [ ] `update(double deltaTime)` 메서드 구현
+- [ ] MovableBall 타입 확인 후 move() 호출 (instanceof 사용)
+
+#### Step 2: 단위 테스트 작성
+`MovableWorldTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| 상속 확인 | `MovableWorld instanceof World`가 true인지 |
+| 생성자 정상 동작 | width, height가 올바르게 저장되는지 |
+| add 동작 | MovableBall 추가 후 getBallCount()가 증가하는지 |
+| update 이동 | update 호출 후 MovableBall이 이동했는지 |
+| update 여러 공 | 여러 MovableBall이 각각 올바르게 이동하는지 |
+| 정적 공 무시 | 일반 Ball은 update에서 이동하지 않는지 |
+| 부모 메서드 사용 | `add()`, `remove()`, `getBalls()` 등 상속받은 메서드가 작동하는지 |
+
+---
 
 ### 3.3 속도 벡터와 물리 계산
 
@@ -177,13 +258,6 @@ double deltaTime = (now - lastUpdate) / 1_000_000_000.0;
 - `normalize()`: 정규화 (크기를 1로 만들기)
 - `dot(Vector2D other)`: 내적 (x₁×x₂ + y₁×y₂)
 - `getX()`, `getY()`: Getter 메서드
-
-**구현 힌트:**
-```java
-// 모든 연산은 새 Vector2D 객체 반환 (immutable)
-// normalize에서 magnitude가 0일 때 처리 필요
-// 내적 = x₁×x₂ + y₁×y₂
-```
 
 **Point와 Vector2D의 관계**
 
@@ -255,16 +329,6 @@ public MovableWorld(double width, double height) {
 public void update(double deltaTime) {
     // 모든 공들의 위치 업데이트
     // 각 공이 MovableBall인지 확인하고 move() 호출
-}
-```
-
-**update() 메서드 구현 힌트:**
-```java
-// instanceof를 사용하여 MovableBall 타입 확인
-for (Ball ball : balls) {
-    if (ball instanceof MovableBall movableBall) {
-        movableBall.move(deltaTime);
-    }
 }
 ```
 
@@ -348,16 +412,91 @@ public class MovableBallV2 extends PaintableBall {
 }
 ```
 
-**구현 힌트:**
-```java
-// 중력 적용 예시
-Vector2D gravity = new Vector2D(0, 9.8 * 10); // 10픽셀 = 1미터로 스케일링
-ball.applyForce(gravity);
+---
 
-// 바람 적용 예시
-Vector2D wind = new Vector2D(5, 0);
-ball.applyForce(wind);
+### 연습 3-5: 종합 - MovableWorldApp 애플리케이션 완성
+
+AnimationTimer를 사용하여 움직이는 공들을 표시하는 JavaFX 애플리케이션을 완성하세요.
+
+#### Step 1: 요구사항 확인
+
+**기능 요구사항:**
+- [ ] MovableWorld 생성 (800×600)
+- [ ] 랜덤한 속도로 움직이는 공 10개 생성
+- [ ] AnimationTimer로 매 프레임 업데이트 및 렌더링
+- [ ] 델타 타임을 사용한 시간 기반 이동
+- [ ] FPS 표시 (화면 상단)
+
+#### Step 2: JavaFX 애플리케이션 구현
+```java
+import javafx.animation.AnimationTimer;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import java.util.Random;
+
+public class MovableWorldApp extends Application {
+
+    private MovableWorld world;
+    private Canvas canvas;
+    private GraphicsContext gc;
+    private Label fpsLabel;
+    private Random random = new Random();
+
+    // FPS 계산용 변수
+    private long lastUpdate = 0;
+    private int frameCount = 0;
+    private long lastFpsTime = 0;
+
+    @Override
+    public void start(Stage stage) {
+        // TODO: MovableWorld 생성 (800x600)
+        // TODO: Canvas 생성 및 GraphicsContext 획득
+        // TODO: FPS 라벨 생성
+        // TODO: 초기 공 10개 생성 (createMovingBalls 메서드)
+        // TODO: AnimationTimer 생성 및 시작
+        // TODO: Scene, Stage 구성
+    }
+
+    private void createMovingBalls(int count) {
+        // TODO: count개의 랜덤 위치, 크기, 색상, 속도의 MovableBall 생성
+        // 랜덤 위치: 가장자리에서 반지름만큼 떨어진 곳
+        // 랜덤 크기: 10~30 픽셀
+        // 랜덤 색상: RGB 각각 0~1
+        // 랜덤 속도: -100~100 pixels/second
+    }
+
+    private Color randomColor() {
+        return Color.color(random.nextDouble(), random.nextDouble(), random.nextDouble());
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
 ```
+
+#### Step 3: 실행 및 확인
+
+**확인 사항:**
+- [ ] 프로그램 시작 시 10개의 공이 화면에 표시되는가?
+- [ ] 공들이 각자의 속도로 움직이는가?
+- [ ] FPS가 약 60으로 표시되는가?
+- [ ] 공들이 화면 밖으로 나가는가? (4장에서 경계 처리 예정)
+
+**추가 도전:**
+- [ ] 마우스 클릭 위치에 새 공 추가
+- [ ] 스페이스바로 일시정지/재개
+- [ ] 공 개수 표시
+
+---
 
 ## 실습 과제
 
@@ -425,19 +564,6 @@ AnimationTimer를 사용하여 움직이는 공들을 표시합니다:
 - 랜덤 크기: 10~30 픽셀
 - 랜덤 색상: RGB 각각 0~255
 - 랜덤 속도: -100~100 pixels/second
-
-**FPS 계산 힌트:**
-```java
-// handle() 메서드에서
-frameCount++;
-long currentTime = System.currentTimeMillis();
-if (currentTime - lastFpsTime >= 1000) { // 1초마다
-    int fps = frameCount;
-    frameCount = 0;
-    lastFpsTime = currentTime;
-    Platform.runLater(() -> fpsLabel.setText("FPS: " + fps));
-}
-```
 
 ### Lab 3-3: Vector2D 클래스 활용
 Vector2D를 사용하여 더 나은 물리 구현:

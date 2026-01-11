@@ -230,192 +230,298 @@ MovableBall과 MovableBox에 동일한 move() 메서드:
 ## 실습 과제
 
 ### Lab 6-1: Box 클래스 구현
+상속을 사용하여 Box 클래스 계층을 구현하세요.
 
-**Box 클래스 설계**
+### Lab 6-2: 혼합 World 구현
+Ball과 Box를 모두 관리하는 World를 구현하세요.
 
-상속을 사용하여 Box 클래스 계층을 구현하세요:
+### Lab 6-3: MovableBox 구현
+Box를 상속받아 움직임 기능을 추가하세요.
 
-**Box 클래스 요구사항:**
+### Lab 6-4: 충돌 처리 확장
+Ball-Box 충돌을 추가하세요.
 
-**필드 (private):**
-- `position`: Point 타입의 왼쪽 상단 모서리 좌표 (2장의 Point 클래스 사용)
-- `width`, `height`: 크기
+### Lab 6-5: 문제점 분석
+상속만 사용했을 때의 문제점을 문서화하세요.
 
-**좌표 시스템 설명:**
-- JavaFX 좌표계: 왼쪽 상단이 원점 (0, 0)
-- x축: 오른쪽이 양의 방향
-- y축: 아래쪽이 양의 방향
-- Box의 영역:
-  - 왼쪽 상단: (x, y)
-  - 오른쪽 상단: (x + width, y)
-  - 왼쪽 하단: (x, y + height)
-  - 오른쪽 하단: (x + width, y + height)
+---
 
-**시각적 표현:**
+## 연습 문제
+
+### 연습 6-1: Box 클래스 구현
+
+기본 Box 클래스를 구현합니다.
+
+#### Step 1: 클래스 작성
+`Box.java` 파일을 생성하고 기본 Box 클래스를 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `Point position` 필드 선언 (왼쪽 상단 좌표)
+- [ ] `double width`, `double height` 필드 선언 (박스의 크기)
+- [ ] 생성자 구현 (Point, width, height를 받아 초기화, 유효성 검사)
+- [ ] `Point getPosition()` 위치 반환 구현
+- [ ] `void setPosition(Point position)` 위치 설정 구현 (null 체크)
+- [ ] `double getWidth()`, `double getHeight()` 크기 반환 구현
+- [ ] `void setWidth(double width)`, `void setHeight(double height)` 크기 설정 구현 (유효성 검사)
+- [ ] `boolean contains(Point point)` 점이 박스 내부에 있는지 확인 구현
+- [ ] `RectangleBounds getBounds()` RectangleBounds 반환 구현
+
+**좌표 시스템:**
 ```
 (0,0) → x축
 ↓      position────────────(position.x+width, position.y)
 y축     │                    │
         │     Box 내부       │
         │                    │
-        (position.x, position.y+height)────(position.x+width, position.y+height)
+        └────────────────────(position.x+width, position.y+height)
 ```
 
-**메서드:**
-- 생성자: 위치(Point)와 크기를 받아 초기화
-- getter: `getPosition()`, `getWidth()`, `getHeight()`
-- setter: `setPosition(Point position)` - null 체크 필요
-- `contains(double px, double py)`: 점이 박스 안에 있는지 확인
-- `getBounds()`: RectangleBounds 객체 반환
+#### Step 2: 단위 테스트 작성
+`BoxTest.java`를 작성하여 다음 항목을 테스트하세요:
 
-**PaintableBox 클래스 요구사항:**
-- Box를 상속받아 구현
-- 추가 필드: `color` (Color 타입)
-- 추가 메서드: `getColor()`, `setColor()`
-- PaintableBall과 동일한 색상 처리 로직 필요
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| 생성 테스트 | 위치와 크기 확인 |
+| setter 테스트 | 위치, 크기 변경 확인 |
+| 유효성 검사 | 음수/0 크기에 대한 예외 |
+| contains 테스트 | 내부, 경계, 외부 점 검사 |
+| getBounds 테스트 | RectangleBounds 반환 확인 |
 
-**구현 힌트:**
+---
+
+### 연습 6-2: PaintableBox 구현 (코드 중복 경험)
+
+Box를 상속받아 색상 기능을 추가합니다. PaintableBall과 동일한 코드를 작성해야 합니다.
+
+#### Step 1: 클래스 작성
+`PaintableBox.java` 파일을 생성하고 Box를 상속받아 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `extends Box`로 상속 선언
+- [ ] `Color color` 필드 선언
+- [ ] 생성자(위치, 크기) 구현 (기본 색상 RED 설정)
+- [ ] 생성자(위치, 크기, 색상) 구현 (지정된 색상 설정)
+- [ ] `Color getColor()` 색상 반환 구현
+- [ ] `void setColor(Color color)` 색상 설정 구현 (null 체크)
+- [ ] `void paint(GraphicsContext gc)` 화면에 그리기 구현
+
+**코드 중복 인식:**
+PaintableBall의 다음 코드를 그대로 복사해야 합니다:
+- `color` 필드 선언
+- `getColor()` 메서드
+- `setColor()` 메서드와 null 체크 로직
+
+#### Step 2: 단위 테스트 작성
+`PaintableBoxTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| 생성 테스트 | Box 속성 + 색상 확인 |
+| 기본 색상 테스트 | 색상 없이 생성 시 RED |
+| 색상 변경 테스트 | setColor 확인 |
+| null 색상 테스트 | 예외 발생 확인 |
+| 코드 중복 확인 | PaintableBall과 동일 동작 |
+
+---
+
+### 연습 6-3: MovableBox 구현 (코드 중복 경험)
+
+Box를 상속받아 움직임 기능을 추가합니다. MovableBall과 동일한 코드를 작성해야 합니다.
+
+#### Step 1: 클래스 작성
+`MovableBox.java` 파일을 생성하고 Box를 상속받아 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `extends Box`로 상속 선언
+- [ ] `Vector2D velocity` 필드 선언
+- [ ] 생성자 구현 (속도를 (0, 0)으로 초기화)
+- [ ] `Vector2D getVelocity()` 속도 반환 구현
+- [ ] `void setVelocity(Vector2D velocity)` 속도 설정 구현
+- [ ] `void move(double deltaTime)` 이동 구현 (위치 = 위치 + 속도 × 시간)
+
+**코드 중복 인식:**
+MovableBall의 다음 코드를 그대로 복사해야 합니다:
+- `velocity` 필드 선언
+- `getVelocity()`, `setVelocity()` 메서드
+- `move()` 메서드의 이동 로직
+
+#### Step 2: 단위 테스트 작성
+`MovableBoxTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| 생성 테스트 | 초기 속도 (0, 0) 확인 |
+| 속도 설정 테스트 | setVelocity 확인 |
+| 이동 테스트 | move 후 위치 변경 확인 |
+| 코드 중복 확인 | MovableBall과 동일 동작 |
+
+---
+
+### 연습 6-4: MixedWorld 구현 (타입 체크 복잡성 경험)
+
+Ball과 Box를 함께 관리하는 World를 구현합니다.
+
+#### Step 1: 클래스 작성
+`MixedWorld.java` 파일을 생성하고 Ball과 Box를 함께 관리하는 World를 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `List<Ball> balls` 필드 선언
+- [ ] `List<Box> boxes` 필드 선언
+- [ ] `double width`, `double height` 필드 선언 (World 크기)
+- [ ] `void addBall(Ball ball)` Ball 추가 구현
+- [ ] `void addBox(Box box)` Box 추가 구현
+- [ ] `int getBallCount()` Ball 개수 반환 구현
+- [ ] `int getBoxCount()` Box 개수 반환 구현
+- [ ] `void update(double deltaTime)` instanceof로 MovableBall/MovableBox 체크 후 move 구현
+- [ ] `void render(GraphicsContext gc)` instanceof로 Paintable 체크 후 그리기 구현
+
+**타입 체크 로직:**
 ```java
-// Box 생성자 예시
-public Box(Point position, double width, double height) {
-    if (position == null) {
-        throw new IllegalArgumentException("위치는 null일 수 없습니다");
+public void update(double deltaTime) {
+    // Ball 업데이트 - instanceof 체크 필요
+    for (Ball ball : balls) {
+        if (ball instanceof MovableBall) {
+            ((MovableBall) ball).move(deltaTime);
+        }
     }
-    // width, height 유효성 검사
-    this.position = position;
-    this.width = width;
-    this.height = height;
+    // Box 업데이트 - 또 다시 instanceof 체크
+    for (Box box : boxes) {
+        if (box instanceof MovableBox) {
+            ((MovableBox) box).move(deltaTime);
+        }
+    }
 }
-
-// contains 메서드 로직
-public boolean contains(double px, double py) {
-    double x = position.getX();
-    double y = position.getY();
-    return px >= x && px <= x + width &&
-           py >= y && py <= y + height;
-}
-
-// 예시: Box(new Point(100, 100), 50, 30)
-// - 점 (100, 100): true (왼쪽 상단 모서리)
-// - 점 (150, 130): true (오른쪽 하단 모서리)
-// - 점 (125, 115): true (내부)
-// - 점 (99, 100): false (왼쪽 경계 밖)
-// - 점 (151, 130): false (오른쪽 경계 밖)
 ```
 
-**경험할 문제점:**
-PaintableBall의 color 관련 코드를 그대로 복사해야 합니다!
+#### Step 2: 단위 테스트 작성
+`MixedWorldTest.java`를 작성하여 다음 항목을 테스트하세요:
 
-### Lab 6-2: 혼합 World 구현
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| 생성 테스트 | 크기 확인 |
+| Ball/Box 추가 | 각 리스트에 추가 확인 |
+| 다양한 타입 추가 | Ball, PaintableBall, MovableBall 등 |
+| update 테스트 | MovableBall, MovableBox만 이동 |
+| render 테스트 | instanceof 체크 동작 확인 |
 
-**MixedWorld 클래스 설계**
+---
 
-Ball과 Box를 모두 관리하는 World를 구현하세요:
+### 연습 6-5: ExtendedCollisionHandler 구현 (충돌 조합 폭발 경험)
 
-**필드 (private):**
-- `List<Ball> balls`: Ball 객체들 저장
-- `List<Box> boxes`: Box 객체들 저장
-- `width`, `height`: 화면 크기
+여러 타입 간의 충돌을 처리합니다.
 
-**메서드 요구사항:**
+#### Step 1: 클래스 작성
+`ExtendedCollisionHandler.java` 파일을 생성하고 여러 타입 간의 충돌을 처리하는 클래스를 구현하세요.
 
-1. **addBall(Ball ball)**:
-   - balls 리스트에 추가
+**구현 체크리스트:**
+- [ ] `void checkBallToBallCollisions(List<Ball> balls)` Ball-Ball 충돌 처리 구현
+- [ ] `void checkBoxToBoxCollisions(List<Box> boxes)` Box-Box 충돌 처리 구현 (AABB)
+- [ ] `void checkBallToBoxCollisions(List<Ball> balls, List<Box> boxes)` Ball-Box 충돌 처리 구현
+- [ ] `CollisionSide detectCollisionSide(double x, double y, Box box)` 충돌면 판단 구현
 
-2. **addBox(Box box)**:
-   - boxes 리스트에 추가
-
-3. **update(double deltaTime)**:
-   - 모든 Ball 순회하며 instanceof로 타입 체크
-   - MovableBall이면 move() 호출
-   - 모든 Box 순회하며 instanceof로 타입 체크
-   - MovableBox이면 move() 호출
-
-4. **render(GraphicsContext gc)**:
-   - 배경 그리기
-   - 모든 Ball 순회하며 instanceof로 타입 체크
-   - PaintableBall이면 paint() 호출
-   - 모든 Box 순회하며 instanceof로 타입 체크
-   - PaintableBox이면 그리기 구현
-
-**구현 힌트:**
+**CollisionSide enum:**
 ```java
-// update 메서드의 비효율성
-// Ball용 루프와 Box용 루프가 별도로 필요
-// 각 루프에서 instanceof 검사 반복
+public enum CollisionSide {
+    TOP, BOTTOM, LEFT, RIGHT, CORNER
+}
 ```
 
-**경험할 문제점:**
-- 코드가 중복되고 복잡해집니다
-- 새로운 도형(Triangle)을 추가하면 모든 메서드 수정 필요
-
-### Lab 6-3: MovableBox 구현
-
-**MovableBox 클래스 설계**
-
-Box를 상속받아 움직임 기능을 추가하세요:
-
-**필드 (private):**
-- `velocity`: Vector2D 타입의 속도 벡터
-
-**메서드:**
-- 생성자: 위치(Point)와 크기를 받아 초기화, 속도는 (0, 0)으로 초기화
-- `getVelocity()`, `setVelocity(Vector2D velocity)`
-- `move(double deltaTime)`: 시간에 따른 위치 업데이트
-
-**경험할 문제점:**
-MovableBall의 move() 메서드와 완전히 동일한 로직을 다시 구현해야 합니다!
-
-### Lab 6-5: 충돌 처리 확장
-
-**ExtendedCollisionHandler 클래스 설계**
-
-Ball-Box 충돌을 추가하세요:
-
-**구현해야 할 메서드:**
-
-1. **checkBallToBallCollisions(List<Ball> balls)**:
-   - 이중 루프로 모든 Ball 쌍 검사
-   - 거리 계산으로 충돌 판단
-   - 충돌 시 반사 처리
-
-2. **checkBoxToBoxCollisions(List<Box> boxes)**:
-   - 이중 루프로 모든 Box 쌍 검사
-   - 사각형 교차 검사 (AABB)
-   - 충돌 시 처리 로직
-
-3. **checkBallToBoxCollisions(List<Ball> balls, List<Box> boxes)**:
-   - 모든 Ball-Box 쌍 검사
-   - Box의 어느 면과 충돌했는지 확인
-   - 면에 따라 다른 반사 방향 계산
-
-**Ball-Box 충돌 판단 로직:**
+**Ball-Box 충돌 판단:**
 ```java
 // 1. Box에서 Ball 중심까지 가장 가까운 점 찾기
-// 2. 그 점과 Ball 중심의 거리 계산
-// 3. 거리가 Ball 반지름보다 작으면 충돌
-// 4. 충돌한 면 판단 (상/하/좌/우/코너)
+double closestX = Math.max(box.getMinX(), Math.min(ball.getCenterX(), box.getMaxX()));
+double closestY = Math.max(box.getMinY(), Math.min(ball.getCenterY(), box.getMaxY()));
+
+// 2. 가장 가까운 점과 Ball 중심 사이 거리
+double distanceX = ball.getCenterX() - closestX;
+double distanceY = ball.getCenterY() - closestY;
+double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+// 3. 거리 < 반지름이면 충돌
+boolean collision = distance < ball.getRadius();
 ```
 
-**CollisionSide 판단:**
-- TOP: Ball이 Box 위에서 충돌
-- BOTTOM: Ball이 Box 아래에서 충돌
-- LEFT: Ball이 Box 왼쪽에서 충돌
-- RIGHT: Ball이 Box 오른쪽에서 충돌
-- CORNER: Ball이 Box 모서리와 충돌
+#### Step 2: 단위 테스트 작성
+`ExtendedCollisionHandlerTest.java`를 작성하여 다음 항목을 테스트하세요:
 
-**조합 폭발 계산:**
-- 2개 타입: 3개 메서드 (Ball-Ball, Box-Box, Ball-Box)
-- 3개 타입: 6개 메서드 (+ Triangle-Triangle, Ball-Triangle, Box-Triangle)
-- 4개 타입: 10개 메서드
-- n개 타입: n(n+1)/2개 메서드!
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| Ball-Ball 충돌 | 충돌 감지 및 속도 변경 |
+| Box-Box 충돌 | AABB 충돌 감지 |
+| Ball-Box 충돌 | 각 면 충돌 처리 |
+| CollisionSide 판단 | TOP, BOTTOM, LEFT, RIGHT, CORNER |
+| 조합 폭발 확인 | n개 타입 = n(n+1)/2 메서드 |
 
-### Lab 6-6: 문제점 분석
-상속만 사용했을 때의 문제점을 문서화:
-1. 몇 개의 클래스가 필요한가?
-2. 코드 중복이 얼마나 발생하는가?
-3. 새로운 도형(Triangle)을 추가한다면?
-4. 새로운 기능(Rotatable)을 추가한다면?
+---
+
+### 연습 6-6: 클래스 폭발 문제 분석
+
+상속만 사용할 때의 문제점을 분석하고 문서화합니다.
+
+#### Step 1: 클래스 목록 작성
+
+**현재 필요한 클래스 (Box 계열):**
+| 기능 조합 | 클래스 이름 |
+|----------|------------|
+| 기본 | Box |
+| Paintable | PaintableBox |
+| Movable | MovableBox |
+| Bounded | BoundedBox |
+| Paintable + Movable | PaintableMovableBox |
+| Paintable + Bounded | PaintableBoundedBox |
+| Movable + Bounded | MovableBoundedBox |
+| Paintable + Movable + Bounded | PaintableMovableBoundedBox |
+
+**총 8개 클래스 (2³)**, Ball도 동일하게 8개 필요 → **총 16개 클래스**
+
+#### Step 2: 문제점 분석
+
+**분석 항목:**
+| 문제 | 설명 |
+|------|------|
+| 클래스 폭발 | n개 기능 = 2ⁿ개 클래스 |
+| 코드 중복 | Paintable, Movable 로직이 Ball/Box에 중복 |
+| instanceof 지옥 | 모든 타입 조합을 체크해야 함 |
+| 유지보수 어려움 | 새 기능/타입 추가 시 전체 수정 |
+
+#### Step 3: 문서화
+
+```java
+public class InheritanceProblemAnalysis {
+    public static void main(String[] args) {
+        System.out.println("=== 상속만 사용할 때의 문제점 ===\n");
+
+        // 1. 클래스 폭발
+        System.out.println("1. 클래스 폭발");
+        System.out.println("   - 현재: 2개 도형 × 3개 기능 = 16개 클래스");
+        System.out.println("   - Triangle 추가: 3개 도형 × 3개 기능 = 24개 클래스 (+8)");
+        System.out.println("   - Rotatable 추가: 2개 도형 × 4개 기능 = 32개 클래스 (+16)");
+
+        // 2. 코드 중복
+        System.out.println("\n2. 코드 중복");
+        System.out.println("   - PaintableBall과 PaintableBox: color 관련 코드 동일");
+        System.out.println("   - MovableBall과 MovableBox: move() 로직 동일");
+        System.out.println("   - DRY 원칙 위반");
+
+        // 3. 타입 체크 복잡성
+        System.out.println("\n3. 타입 체크 복잡성");
+        System.out.println("   - World.update()에서 instanceof 체크 필수");
+        System.out.println("   - 새 타입 추가 시 모든 instanceof 코드 수정");
+
+        // 4. 충돌 조합 폭발
+        System.out.println("\n4. 충돌 조합 폭발");
+        System.out.println("   - n개 타입 = n(n+1)/2개 충돌 메서드 필요");
+        System.out.println("   - 4개 타입: 10개 메서드");
+        System.out.println("   - 5개 타입: 15개 메서드");
+
+        // 5. 해결책 미리보기
+        System.out.println("\n=== 해결책 (7장에서 다룸) ===");
+        System.out.println("   - 인터페이스 사용: Paintable, Movable, Boundable, Collidable");
+        System.out.println("   - 다형성을 통한 코드 단순화");
+        System.out.println("   - 클래스 폭발 해결: 기능별 인터페이스 조합");
+    }
+}
+```
 
 ## JUnit 테스트 예제
 

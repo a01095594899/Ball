@@ -197,159 +197,477 @@ for (int i = 0; i < size; i++) {
 ## 실습 과제
 
 ### Lab 7-1: 인터페이스 구현
-삼각형과 별 모양 객체 구현:
-
-**Triangle 클래스 설계**
-- Paintable, Movable, Collidable 구현
-- 3개의 꼭짓점으로 삼각형 정의
-- `paint()`: 다각형 그리기
-- `getBounds()`: 삼각형을 포함하는 사각형
-
-**Star 클래스 설계**
-- 같은 인터페이스들 구현
-- 5각 별 모양
-- 회전 기능 추가 가능
+삼각형과 별 모양 객체 구현
 
 ### Lab 7-2: 복합 객체
-특수한 행동을 하는 객체들:
-
-**BouncingTriangle 클래스 설계**
-
-Triangle을 상속받아 특수 기능 추가:
-
-**추가 필드:**
-- `rotationSpeed`: 회전 속도
-- `colorChangeSpeed`: 색상 변화 속도
-
-**특수 기능:**
-- `handleCollision()` 오버라이드:
-  - 반사 시 회전 속도 반전
-  - 색상을 랜덤하게 변경
-- `move()` 오버라이드:
-  - 위치 업데이트 + 회전 업데이트
-
-**ExplodingBall 클래스 설계**
-
-Ball을 상속받아 특수 기능 추가:
-
-**추가 필드:**
-- `hasExploded`: 폭발 여부
-- `miniballCount`: 생성할 작은 공 개수 (3-5개)
-
-**특수 기능:**
-- `handleCollision()` 오버라이드:
-  - CUSTOM 액션일 때 폭발
-  - `explode()` 메서드 호출
-- `explode()` 메서드:
-  - 여러 개의 작은 Ball 생성
-  - 랜덤 방향으로 발사
-  - 원본 공은 제거 표시
-
-**구현 힌트:**
-```java
-// 작은 공 생성
-각도 = 0 ~ 2*PI 랜덤
-속도 = 50 ~ 150 랜덤
-dx = 속도 * cos(각도)
-dy = 속도 * sin(각도)
-```
+특수한 행동을 하는 객체들 구현
 
 ### Lab 7-3: 동적 액션 변경
-런타임에 충돌 액션을 변경하는 시스템:
-
-**ActionController 클래스 설계**
-
-**필드:**
-- `selectedObject`: 현재 선택된 객체
-- `actionChangeTimer`: 자동 변경 타이머
-- `collisionCounts`: 각 객체의 충돌 횟수 기록
-
-**기능 요구사항:**
-
-1. **객체 선택**:
-   - 마우스 클릭으로 객체 선택
-   - 선택된 객체 하이라이트
-
-2. **키보드 액션 변경**:
-   ```java
-   // 키 매핑
-   B 키: BOUNCE
-   D 키: DESTROY
-   S 키: STOP
-   P 키: PASS
-   C 키: CUSTOM
-   ```
-
-3. **시간 기반 자동 변경**:
-   - 10초마다 모든 객체의 액션 순환
-   - BOUNCE → STOP → PASS → BOUNCE
-
-4. **충돌 횟수 기반 진화**:
-   - 5회 충돌: BOUNCE → STOP
-   - 10회 충돌: STOP → DESTROY
-   - 15회 충돌: 새로운 기능 해금
-
-**구현 힌트:**
-```java
-// Scene에 이벤트 핸들러 등록
-setOnKeyPressed()
-setOnMouseClicked()
-
-// instanceof로 타입 확인 후 캐스팅
-if (obj instanceof Collidable) {
-    ((Collidable) obj).setCollisionAction(newAction);
-}
-```
+런타임에 충돌 액션을 변경하는 시스템 구현
 
 ### Lab 7-4: 고급 경계 시스템
-Box를 이용한 복잡한 레벨 디자인:
+Box를 이용한 복잡한 레벨 디자인
 
-**MazeWorld 클래스 설계**
+---
 
-**미로 구성:**
+## 연습 문제
+
+### 연습 7-1: Paintable 인터페이스와 구현
+
+화면에 그릴 수 있는 객체를 위한 Paintable 인터페이스를 정의하고 구현합니다.
+
+#### Step 1: 인터페이스 작성
+`Paintable.java` 파일을 생성하고 인터페이스를 정의하세요.
+
+**구현 체크리스트:**
+- [ ] `Paintable` 인터페이스 정의 (`paint(GraphicsContext gc)` 메서드 선언)
+- [ ] Ball 클래스에 `implements Paintable` 추가
+- [ ] Box 클래스에 `implements Paintable` 추가
+
 ```java
-// 2차원 배열로 미로 정의
-// 1 = 벽, 0 = 통로, 2 = 출구
-int[][] maze = {
-    {1,1,1,1,1},
-    {1,0,0,0,1},
-    {1,0,1,0,1},
-    {1,0,0,2,1},
-    {1,1,1,1,1}
-};
+public interface Paintable {
+    void paint(GraphicsContext gc);
+}
 ```
 
-**SpecialZone 클래스 설계**
+#### Step 2: Ball과 Box에서 구현
 
-Box를 상속받아 특수 효과 추가:
-
-**ZoneType 열거형:**
-- SPEED_UP: 속도 2배
-- SLOW_DOWN: 속도 0.5배
-- GRAVITY: 아래로 당김 (dy += 10)
-- ANTI_GRAVITY: 위로 밂 (dy -= 10)
-- TELEPORT: 다른 위치로 순간이동
-
-**메서드 요구사항:**
-- `applyEffect(Movable obj)`: 효과 적용
-- `paint()` 오버라이드: 특수 시각 효과
-  - SPEED_UP: 빨간색 반투명
-  - SLOW_DOWN: 파란색 반투명
-  - GRAVITY: 아래 화살표 표시
-  - ANTI_GRAVITY: 위 화살표 표시
-
-**구현 힌트:**
+**Ball의 paint 구현:**
 ```java
-// 효과 적용 로직
-if (zone.isColliding(movableObject)) {
-    zone.applyEffect(movableObject);
+@Override
+public void paint(GraphicsContext gc) {
+    gc.setFill(color);
+    gc.fillOval(center.getX() - radius, center.getY() - radius,
+                radius * 2, radius * 2);
 }
+```
 
-// 반투명 효과
-gc.setGlobalAlpha(0.3);
-gc.setFill(effectColor);
-gc.fillRect(x, y, width, height);
-gc.setGlobalAlpha(1.0);
+**Box의 paint 구현:**
+```java
+@Override
+public void paint(GraphicsContext gc) {
+    gc.setFill(color);
+    gc.fillRect(position.getX(), position.getY(), width, height);
+}
+```
+
+#### Step 3: 단위 테스트 작성
+`PaintableTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| Ball이 Paintable 구현 | `ball instanceof Paintable` 확인 |
+| Box가 Paintable 구현 | `box instanceof Paintable` 확인 |
+| 다형성 테스트 | `List<Paintable>`로 모든 객체 관리 |
+
+---
+
+### 연습 7-2: Movable 인터페이스와 구현
+
+움직일 수 있는 객체를 위한 Movable 인터페이스를 정의하고 구현합니다.
+
+#### Step 1: 인터페이스 작성
+`Movable.java` 파일을 생성하고 인터페이스를 정의하세요.
+
+**구현 체크리스트:**
+- [ ] `void move(double deltaTime)` 시간 기반 이동 메서드 선언
+- [ ] `Vector2D getVelocity()` 속도 반환 메서드 선언
+- [ ] `void setVelocity(Vector2D velocity)` 속도 설정 메서드 선언
+
+```java
+public interface Movable {
+    void move(double deltaTime);
+    Vector2D getVelocity();
+    void setVelocity(Vector2D velocity);
+}
+```
+
+#### Step 2: Ball에서 구현
+Ball 클래스에 `implements Movable`을 추가하고 메서드를 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `Vector2D velocity` 필드 선언
+- [ ] `move(double deltaTime)` 구현 (위치 += 속도 × 시간)
+- [ ] `getVelocity()`, `setVelocity(Vector2D)` 속도 접근자 구현
+
+#### Step 3: 단위 테스트 작성
+`MovableTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| Movable 구현 확인 | `ball instanceof Movable` |
+| 속도 설정/조회 | setVelocity, getVelocity |
+| 이동 테스트 | move 후 위치 변경 확인 |
+
+---
+
+### 연습 7-3: Collidable 인터페이스와 CollisionAction
+
+충돌 처리가 가능한 객체를 위한 Collidable 인터페이스를 정의합니다.
+
+#### Step 1: CollisionAction 열거형 작성
+
+```java
+public enum CollisionAction {
+    BOUNCE,   // 반사
+    DESTROY,  // 파괴
+    STOP,     // 정지
+    PASS,     // 통과
+    CUSTOM    // 사용자 정의
+}
+```
+
+#### Step 2: Boundable 인터페이스 작성
+
+```java
+public interface Boundable {
+    Bounds getBounds();
+    default boolean isColliding(Boundable other) {
+        return this.getBounds().intersects(other.getBounds());
+    }
+}
+```
+
+#### Step 3: Collidable 인터페이스 작성
+`Collidable.java` 파일을 생성하고 Boundable을 확장하는 인터페이스를 정의하세요.
+
+**구현 체크리스트:**
+- [ ] `extends Boundable`로 Boundable 확장
+- [ ] `void handleCollision(Collidable other)` 충돌 처리 메서드 선언
+- [ ] `CollisionAction getCollisionAction()` 현재 액션 반환 메서드 선언
+- [ ] `void setCollisionAction(CollisionAction action)` 액션 설정 메서드 선언
+
+```java
+public interface Collidable extends Boundable {
+    void handleCollision(Collidable other);
+    CollisionAction getCollisionAction();
+    void setCollisionAction(CollisionAction action);
+}
+```
+
+#### Step 4: Ball에서 구현
+
+**handleCollision 구현:**
+```java
+@Override
+public void handleCollision(Collidable other) {
+    switch (collisionAction) {
+        case BOUNCE:
+            // 충돌 방향 계산 후 속도 반전
+            break;
+        case DESTROY:
+            this.destroyed = true;
+            break;
+        case STOP:
+            this.velocity = Vector2D.zero();
+            break;
+        case PASS:
+            // 아무것도 하지 않음
+            break;
+        case CUSTOM:
+            // 하위 클래스에서 구현
+            break;
+    }
+}
+```
+
+---
+
+### 연습 7-4: SimpleWorld 구현
+
+인터페이스를 활용한 단순화된 World 클래스를 구현합니다.
+
+#### Step 1: 클래스 작성
+`SimpleWorld.java` 파일을 생성하고 인터페이스를 활용한 World를 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `List<Object> gameObjects` 필드 선언 (다양한 타입 저장)
+- [ ] `List<Box> boundaries` 필드 선언 (경계 Box 리스트)
+- [ ] `void addObject(Object obj)` 객체 추가 구현
+- [ ] `void removeObject(Object obj)` 객체 제거 구현
+- [ ] `void createBoundaries()` 4개의 경계 Box 생성 구현
+- [ ] `void update(double deltaTime)` Movable 이동, Collidable 충돌 처리 구현
+- [ ] `void render(GraphicsContext gc)` Paintable 렌더링 구현
+
+#### Step 2: update 메서드 구현
+
+```java
+public void update(double deltaTime) {
+    // 1. 모든 Movable 객체 이동
+    for (Object obj : gameObjects) {
+        if (obj instanceof Movable) {
+            ((Movable) obj).move(deltaTime);
+        }
+    }
+
+    // 2. 모든 Collidable 간 충돌 검사
+    for (int i = 0; i < gameObjects.size(); i++) {
+        for (int j = i + 1; j < gameObjects.size(); j++) {
+            Object obj1 = gameObjects.get(i);
+            Object obj2 = gameObjects.get(j);
+
+            if (obj1 instanceof Collidable && obj2 instanceof Collidable) {
+                Collidable c1 = (Collidable) obj1;
+                Collidable c2 = (Collidable) obj2;
+
+                if (c1.isColliding(c2)) {
+                    c1.handleCollision(c2);
+                    c2.handleCollision(c1);
+                }
+            }
+        }
+    }
+
+    // 3. 경계와의 충돌 처리
+    for (Object obj : gameObjects) {
+        if (obj instanceof Collidable) {
+            for (Box boundary : boundaries) {
+                if (((Collidable) obj).isColliding(boundary)) {
+                    ((Collidable) obj).handleCollision(boundary);
+                }
+            }
+        }
+    }
+}
+```
+
+#### Step 3: 단위 테스트 작성
+`SimpleWorldTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| World 생성 | 크기 확인 |
+| 객체 추가 | 다양한 타입 추가 |
+| 다형적 이동 | Movable만 이동 |
+| 다형적 렌더링 | Paintable만 그리기 |
+| 충돌 처리 | Collidable 간 충돌 |
+
+#### Step 4: JavaFX 애플리케이션에서 확인
+
+```java
+public class SimpleWorldApp extends Application {
+    private SimpleWorld world;
+    private Canvas canvas;
+
+    @Override
+    public void start(Stage primaryStage) {
+        world = new SimpleWorld(800, 600);
+        world.createBoundaries();
+        canvas = new Canvas(800, 600);
+
+        // 다양한 객체 추가
+        Ball ball = new Ball(new Point(400, 300), 20, Color.RED);
+        ball.setVelocity(new Vector2D(150, 100));
+        ball.setCollisionAction(CollisionAction.BOUNCE);
+        world.addObject(ball);
+
+        MovableBox box = new MovableBox(new Point(200, 200), 40, 30, Color.BLUE);
+        box.setVelocity(new Vector2D(-80, 120));
+        box.setCollisionAction(CollisionAction.BOUNCE);
+        world.addObject(box);
+
+        AnimationTimer timer = new AnimationTimer() {
+            private long lastTime = 0;
+
+            @Override
+            public void handle(long now) {
+                if (lastTime == 0) {
+                    lastTime = now;
+                    return;
+                }
+                double deltaTime = (now - lastTime) / 1_000_000_000.0;
+                lastTime = now;
+
+                world.update(deltaTime);
+
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+                gc.setFill(Color.WHITE);
+                gc.fillRect(0, 0, 800, 600);
+                world.render(gc);
+            }
+        };
+        timer.start();
+
+        Scene scene = new Scene(new Pane(canvas), 800, 600);
+        primaryStage.setTitle("Simple World Demo");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+```
+
+---
+
+### 연습 7-5: Triangle 클래스 구현 (다중 인터페이스)
+
+세 인터페이스를 모두 구현하는 Triangle 클래스를 만듭니다.
+
+#### Step 1: 클래스 작성
+`Triangle.java` 파일을 생성하고 세 인터페이스를 모두 구현하세요.
+
+**구현 체크리스트:**
+- [ ] `implements Paintable, Movable, Collidable`로 다중 인터페이스 구현
+- [ ] `Point p1`, `Point p2`, `Point p3` 세 꼭짓점 필드 선언
+- [ ] `Vector2D velocity` 속도 필드 선언
+- [ ] `Color color` 색상 필드 선언
+- [ ] `CollisionAction collisionAction` 충돌 액션 필드 선언
+- [ ] `paint(GraphicsContext gc)` 삼각형 그리기 구현
+- [ ] `move(double deltaTime)` 세 점 모두 이동 구현
+- [ ] `Bounds getBounds()` 포함하는 사각형 반환 구현
+
+```java
+public class Triangle implements Paintable, Movable, Collidable {
+    private Point p1, p2, p3;
+    private Vector2D velocity;
+    private Color color;
+    private CollisionAction collisionAction;
+    // ...
+}
+```
+
+#### Step 2: 메서드 구현
+
+**getCenter() - 무게중심:**
+```java
+public Point getCenter() {
+    double cx = (p1.getX() + p2.getX() + p3.getX()) / 3;
+    double cy = (p1.getY() + p2.getY() + p3.getY()) / 3;
+    return new Point(cx, cy);
+}
+```
+
+**getBounds() - 경계 사각형:**
+```java
+@Override
+public Bounds getBounds() {
+    double minX = Math.min(p1.getX(), Math.min(p2.getX(), p3.getX()));
+    double minY = Math.min(p1.getY(), Math.min(p2.getY(), p3.getY()));
+    double maxX = Math.max(p1.getX(), Math.max(p2.getX(), p3.getX()));
+    double maxY = Math.max(p1.getY(), Math.max(p2.getY(), p3.getY()));
+    return new RectangleBounds(minX, minY, maxX - minX, maxY - minY);
+}
+```
+
+**paint() - 삼각형 그리기:**
+```java
+@Override
+public void paint(GraphicsContext gc) {
+    gc.setFill(color);
+    gc.fillPolygon(
+        new double[]{p1.getX(), p2.getX(), p3.getX()},
+        new double[]{p1.getY(), p2.getY(), p3.getY()},
+        3
+    );
+}
+```
+
+#### Step 3: 단위 테스트 작성
+`TriangleTest.java`를 작성하여 다음 항목을 테스트하세요:
+
+| 테스트 항목 | 검증 내용 |
+|------------|----------|
+| 다중 인터페이스 | Paintable, Movable, Collidable 확인 |
+| 무게중심 | getCenter 계산 확인 |
+| 경계 | getBounds 계산 확인 |
+| 이동 | 세 점 모두 이동 확인 |
+
+---
+
+### 연습 7-6: 문제 해결 확인 (6장 vs 7장)
+
+6장의 문제들이 7장에서 어떻게 해결되었는지 확인합니다.
+
+#### Step 1: 클래스 폭발 해결 확인
+
+**6장의 문제:**
+- Ball: 8개 클래스 (Ball, PaintableBall, MovableBall, ...)
+- Box: 8개 클래스
+- **총 16개 클래스**
+
+**7장의 해결:**
+- Ball: 1개 클래스 (모든 인터페이스 구현)
+- Box: 2개 클래스 (Box, MovableBox)
+- Triangle: 1개 클래스
+- **총 4개 클래스**
+
+#### Step 2: 코드 중복 해결 확인
+
+```java
+public class CodeDuplicationSolution {
+    public static void main(String[] args) {
+        // 6장에서는 각 타입별로 별도 처리 필요
+        // 7장에서는 인터페이스로 통합 처리
+
+        List<Movable> movables = new ArrayList<>();
+        movables.add(new Ball(new Point(100, 100), 20, Color.RED));
+        movables.add(new MovableBox(new Point(200, 200), 50, 40, Color.BLUE));
+        movables.add(new Triangle(new Point(300, 300), new Point(330, 300), new Point(315, 270), Color.GREEN));
+
+        // 모든 타입에 동일한 코드!
+        for (Movable m : movables) {
+            m.setVelocity(new Vector2D(50, 30));
+            m.move(1.0);
+        }
+
+        System.out.println("=> 코드 중복 제거 완료!");
+    }
+}
+```
+
+#### Step 3: instanceof 지옥 해결 확인
+
+```java
+public class InstanceofSolution {
+    public static void main(String[] args) {
+        List<Paintable> paintables = new ArrayList<>();
+        paintables.add(new Ball(new Point(100, 100), 20, Color.RED));
+        paintables.add(new Box(new Point(200, 200), 50, 40, Color.BLUE));
+        paintables.add(new Triangle(new Point(300, 300), new Point(330, 300), new Point(315, 270), Color.GREEN));
+
+        // 6장: instanceof로 각 타입 체크
+        // 7장: 인터페이스로 통합
+        GraphicsContext gc = /* ... */;
+        for (Paintable p : paintables) {
+            p.paint(gc);  // instanceof 없이 모든 타입 처리!
+        }
+
+        System.out.println("=> instanceof 지옥 탈출!");
+    }
+}
+```
+
+#### Step 4: 충돌 조합 폭발 해결 확인
+
+```java
+public class CollisionSolution {
+    public static void main(String[] args) {
+        List<Collidable> collidables = new ArrayList<>();
+        collidables.add(new Ball(new Point(100, 100), 20, Color.RED));
+        collidables.add(new Box(new Point(150, 150), 40, 30, Color.BLUE));
+        collidables.add(new Triangle(new Point(200, 200), new Point(225, 200), new Point(212, 175), Color.GREEN));
+
+        // 6장: Ball-Ball, Ball-Box, Ball-Triangle... 각각 별도 메서드
+        // 7장: Collidable 인터페이스로 통합
+        for (int i = 0; i < collidables.size(); i++) {
+            for (int j = i + 1; j < collidables.size(); j++) {
+                Collidable c1 = collidables.get(i);
+                Collidable c2 = collidables.get(j);
+                if (c1.isColliding(c2)) {
+                    c1.handleCollision(c2);
+                    c2.handleCollision(c1);
+                }
+            }
+        }
+
+        System.out.println("=> 충돌 조합 폭발 해결!");
+        System.out.println("6장: n(n+1)/2 메서드 필요");
+        System.out.println("7장: 1개의 이중 루프로 해결");
+    }
+}
 ```
 
 ## JUnit 테스트 예제

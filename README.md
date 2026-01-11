@@ -10,13 +10,13 @@
 
 이 과정은 10개의 장으로 구성되어 있으며, 각 장은 이전 장을 기반으로 합니다:
 
-### [1. 소개 (Introduction)](doc/01.introduction/README.md)
+### [1. 소개 (Introduction)](docs/01.introduction/README.md)
 - 프로젝트 설정 및 구성
 - 개발 환경 준비
 - 패키지 구조와 조직
 - 테스팅 프레임워크와 모킹
 
-### [2. 볼 월드 (Ball World)](doc/02.ball_world/README.md)
+### [2. 볼 월드 (Ball World)](docs/02.ball_world/README.md)
 - 기본 클래스 정의와 객체 생성
 - 생성자와 필드 관리
 - 메서드 구현 (접근자/변경자)
@@ -24,32 +24,32 @@
 - 예외 처리와 검증
 - 6장까지는 상속만 이용
 
-### [3. 움직이는 월드 (Movable World)](doc/03.movable_world/README.md)
+### [3. 움직이는 월드 (Movable World)](docs/03.movable_world/README.md)
 - 객체 이동과 속도
 - 시간 기반 애니메이션
 - 델타 타임 개념
 - 이동 계산
 
-### [4. 경계가 있는 월드 (Bounded World)](doc/04.bounded_world/README.md)
+### [4. 경계가 있는 월드 (Bounded World)](docs/04.bounded_world/README.md)
 - 충돌 감지 알고리즘
 - 경계 검사
 - 반사 메커니즘
 - 객체 간 충돌
 
-### [5. 추상 데이터 타입 (Abstract Data Types)](doc/05.abstract/README.md)
+### [5. 추상 데이터 타입 (Abstract Data Types)](docs/05.abstract/README.md)
 - 추상 클래스
 - Bounds와 Vector 구현
 - 코드 재사용성
 - 디자인 패턴
 
-### [6. 새로운 객체들 (New Objects)](doc/06.new_object/README.md)
+### [6. 새로운 객체들 (New Objects)](docs/06.new_object/README.md)
 - 상속만을 이용시 새로운 클래스 추가에 따른 문제점 확인
 - Box 클래스 구현
 - 다중 객체 타입
 - 실전 다형성
 - 객체 상호작용
 
-### [7. 단순한 월드 (Simple World)](doc/07.simple_world/README.md)
+### [7. 단순한 월드 (Simple World)](docs/07.simple_world/README.md)
 - 인터페이스 설계 (Boundable, Paintable, Movable)
 - 단순화된 월드 관리
 - 클린 아키텍처 원칙
@@ -57,18 +57,18 @@
   - Bounded World의 경계를 Box 클래스로 구성
   - 객체 충돌시 액션 부여를 통해 반사/파괴/종료 등 다양한 기능 부여
 
-### [8. 벽돌 깨기 (Breakout)](doc/08.breakout/README.md)
+### [8. 벽돌 깨기 (Breakout)](docs/08.breakout/README.md)
 - 클래식 벽돌 깨기 게임
 - 고급 충돌 감지
 - 게임 메커니즘과 점수 시스템
 
-### [9. 외부 효과 (External Effects)](doc/09.external_effect/README.md)
+### [9. 외부 효과 (External Effects)](docs/09.external_effect/README.md)
 - 중력 시뮬레이션
 - 바람 효과
 - 반발 계수
 - 물리 모델링
 
-### [10. 대포 게임 (Cannon Game)](doc/10.cannon_game/README.md)
+### [10. 대포 게임 (Cannon Game)](docs/10.cannon_game/README.md)
 - 완전한 대포 게임 구현
 - 사용자 입력 처리
 - 게임 상태 관리
