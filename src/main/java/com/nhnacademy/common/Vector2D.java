@@ -29,6 +29,10 @@ public class Vector2D {
         return new Vector2D(this.x * scalar, this.y * scalar);
     }
 
+    public double magnitude() {
+        return Math.sqrt(x * x + y * y);
+    }
+
     // public Vector2D angle() {
     // return Math.toDegrees(Math.atan2(getY(), getX()));
     // }

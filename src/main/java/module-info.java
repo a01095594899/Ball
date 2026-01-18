@@ -1,10 +1,16 @@
-module com.nhnacademy {
-    requires javafx.graphics;
+module com.nhnacademy.breakoutgame {
     requires javafx.controls;
+    requires javafx.fxml;
+    requires javafx.graphics;
 
-    // Application 클래스가 있는 패키지를 외부(JavaFX)에서 접근 가능하게 공개
+    // 외부에서 사용하는 패키지 공개
+    exports com.nhnacademy.breakoutgame;
     exports com.nhnacademy.common;
+    exports com.nhnacademy.cannongame;
 
-    // JavaFX 런처가 리플렉션으로 Application을 만들 수 있게 열어줌
-    opens com.nhnacademy.common to javafx.graphics;
+    // JavaFX 런처/컨트롤러 리플렉션 허용
+    opens com.nhnacademy.breakoutgame to javafx.graphics, javafx.fxml;
+    opens com.nhnacademy.common to javafx.fxml;
+    opens com.nhnacademy.cannongame to javafx.fxml;
+
 }

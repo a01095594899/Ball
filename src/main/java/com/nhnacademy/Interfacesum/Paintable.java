@@ -1,4 +1,4 @@
-package com.nhnacademy.common;
+package com.nhnacademy.Interfacesum;
 
 import javafx.scene.canvas.GraphicsContext;
 

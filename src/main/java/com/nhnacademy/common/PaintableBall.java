@@ -8,7 +8,7 @@ public class PaintableBall extends Ball {
     private Color color;
 
     public PaintableBall(Point center, double radius, Color color) {
-        super(center, radius);
+        super(center, radius, color);
         if (color == null) {
             throw new IllegalArgumentException("색은 null로 지정할수 없습니다.");
         }
